@@ -1,6 +1,7 @@
 const app = require('./src/app/app');
+const config = require('./src/global_config');
 
-const port = process.env.PORT || 9000;
+const port = config.get('/port');
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
 })
