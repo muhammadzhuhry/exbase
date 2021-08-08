@@ -7,6 +7,16 @@ const getUsers = async () => {
   return users
 }
 
+const getOneUser = async (data) => {
+  const userId = data;
+
+  const user = listUsers.filter(user => user.id == userId);
+  if (user.length === 0) {
+    console.log('error');
+  }
+  return user
+}
+
 let listUsers = [
   {
     id: 0,
@@ -36,5 +46,6 @@ let listUsers = [
 ]
 
 module.exports = {
-  getUsers
+  getUsers,
+  getOneUser
 }
