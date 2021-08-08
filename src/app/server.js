@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const routes = require('../routes/handler');
+const mongodbConnectionPooling = require('../helpers/databases/mongodb/connection');
 
 const server = express();
 
@@ -19,5 +20,9 @@ server.get('/', (req, res) => {
 
 // grouping route
 server.use('/api/v1', routes);
+
+// initiation goes here
+mongodbConnectionPooling.init();
+
 
 module.exports = server;
