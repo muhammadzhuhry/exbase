@@ -1,4 +1,10 @@
-# Express API Starter
+# Exbase
+
+![GitHub Express version](https://img.shields.io/badge/Express-V4.17-blue?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/bukusaku/exbase?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/bukusaku/exbase?style=for-the-badge)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/bukusaku/exbase?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/bukusaku/exbase?style=for-the-badge)
 
 Includes API Server utilities:
 
