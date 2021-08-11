@@ -15,7 +15,7 @@ const connection = () => {
 }
 
 // 3. create mongodb connection
-const createConnection = async (url) => {
+const createConnection = async (mongodbURL) => {
   const options = { 
     maxPoolSize: parseInt(config.get('/mongodb').maxPoolSize),
     keepAlive: JSON.parse(config.get('/mongodb').keepAlive),
@@ -26,7 +26,7 @@ const createConnection = async (url) => {
   };
 
   try {
-    const connection = await Mongo.connect(url, options);
+    const connection = await Mongo.connect(mongodbURL, options);
     console.log('success create connection');
     return wrapper.data(connection);
   } catch (error) {
@@ -46,7 +46,6 @@ const addConnectionPool = () => {
 // 2. get connection state / mongodb config and then create connection
 const createConnectionPool = async () => {
   connectionPool.map(async (currentConnection, index) => {
-    console.log(currentConnection)
     const result = await createConnection(currentConnection.config);
     if (result.err) {
       connectionPool[index].db = currentConnection;
@@ -93,8 +92,8 @@ const getConnection = async (config) => {
     const connection = await isConnected(result.data);
     connectionIndex = result.data.index;
     return connection;
-
   };
+  
   const result = await checkConnection();
   if (result.err) {
     const state = await createConnection(config);
