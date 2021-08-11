@@ -1,7 +1,7 @@
 {
-  "name": "express-api-starter",
-  "version": "1.2.0",
-  "description": " A basic starter for an express.js API",
+  "name": "exbase",
+  "version": "1.0.0",
+  "description": " A codebase for express with CQRS pattern",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -10,7 +10,7 @@
     "test": "mocha --exit"
   },
   "keywords": [],
-  "author": "CJ R. <cj@null.computer> (https://w3cj.now.sh)",
+  "author": "bukusaku.dev Developer",
   "repository": {
     "type": "git",
     "url": "https://github.com/w3cj/express-api-starter.git"
@@ -23,7 +23,8 @@
     "express": "^4.17.1",
     "helmet": "^4.6.0",
     "mongodb": "^4.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "eslint": "^7.28.0",
