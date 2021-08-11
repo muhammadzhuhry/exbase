@@ -1,4 +1,5 @@
 const Mongo = require('mongodb').MongoClient;
+const validate = require('validate.js');
 const config = require('../../../global_config');
 const wrapper = require('../../utils/wrapper');
 
@@ -60,6 +61,55 @@ const init = () => {
   createConnectionPool();
 };
 
+const ifExistConnection = async (config) => {
+  let state = {};
+  connectionPool.map((currentConnection) => {
+    if (currentConnection.config === config) {
+      state = currentConnection;
+    }
+    return state;
+  });
+  if (validate.isEmpty(state)) {
+    return wrapper.error('connection not exist, connection must be created before');
+  }
+  return wrapper.data(state);
+};
+
+const isConnected = async (state) => {
+  const connection = state.db;
+  if (validate.isEmpty(connection)) {
+    return wrapper.error('connection not found, connection must be created before');
+  }
+  return wrapper.data(state);
+};
+
+const getConnection = async (config) => {
+  let connectionIndex;
+  const checkConnection = async () => {
+    const result = await ifExistConnection(config);
+    if (result.err) {
+      return result;
+    }
+    const connection = await isConnected(result.data);
+    connectionIndex = result.data.index;
+    return connection;
+
+  };
+  const result = await checkConnection();
+  if (result.err) {
+    const state = await createConnection(config);
+    if (state.err) {
+      return wrapper.data(connectionPool[connectionIndex]);
+    }
+    connectionPool[connectionIndex].db = state.data;
+    return wrapper.data(connectionPool[connectionIndex]);
+
+  }
+  return result;
+};
+
+
 module.exports = {
-  init
+  init,
+  getConnection
 }
