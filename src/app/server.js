@@ -14,7 +14,7 @@ server.use(cors({
 // root goes here
 server.get('/', (req, res) => {
   res.json({
-    message: 'API - 👋🌎🌍🌏'
+    message: 'This service is running properly'
   });
 });
 
