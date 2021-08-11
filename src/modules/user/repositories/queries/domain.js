@@ -1,3 +1,9 @@
+const Query = require('./query');
+const config = require('../../../../global_config');
+const Mongo = require('../../../../helpers/databases/mongodb/db');
+
+const mongodb = new Mongo(config.get('/mongodb').url);
+const query = new Query(mongodb);
 
 const getUsers = async () => {
   const users = listUsers;
@@ -8,9 +14,8 @@ const getUsers = async () => {
 }
 
 const getOneUser = async (data) => {
-  const userId = data;
-
-  const user = listUsers.filter(user => user.id == userId);
+  const userId = parseInt(data);
+  const user = await query.findOneUser({ id: userId });
   if (user.length === 0) {
     console.log('error');
   }
