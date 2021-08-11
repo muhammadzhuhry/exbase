@@ -1,11 +1,11 @@
 const express = require('express');
-const queryDomain = require('../repositories/queries/domain');
+const queriesDomain = require('../repositories/queries/domain');
 
 const router = express.Router();
 
 // handler list user
 router.get('/', async (req, res) => {
-  const getUsers = async () => queryDomain.getUsers();
+  const getUsers = async () => queriesDomain.getUsers();
   const sendResponse = async (result) => {
     (result.err) ? res.json({
       status: false,
@@ -26,18 +26,18 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const userId = req.params.id;
 
-  const getOneUser = async () => queryDomain.getOneUser(userId);
+  const getOneUser = async () => queriesDomain.getOneUser(userId);
   const sendResponse = async (result) => {
-    (result.err) ? res.json({
+    (result.error) ? res.json({
       status: false,
       message: `can not get user with id ${userId}`,
       code: 404,
-      data: result
+      data: result.data
     }) : res.json({
       status: true,
       message: `success get user with id ${userId}`,
       code: 200,
-      data: result
+      data: result.data
     });
   };
   sendResponse(await getOneUser());

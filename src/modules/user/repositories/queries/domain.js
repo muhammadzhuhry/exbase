@@ -1,3 +1,11 @@
+const validate = require('validate.js');
+const Query = require('./query');
+const config = require('../../../../global_config');
+const Mongo = require('../../../../helpers/databases/mongodb/db');
+const wrapper = require('../../../../helpers/utils/wrapper');
+
+const mongodb = new Mongo(config.get('/mongodb').url);
+const query = new Query(mongodb);
 
 const getUsers = async () => {
   const users = listUsers;
@@ -8,13 +16,12 @@ const getUsers = async () => {
 }
 
 const getOneUser = async (data) => {
-  const userId = data;
-
-  const user = listUsers.filter(user => user.id == userId);
-  if (user.length === 0) {
-    console.log('error');
+  const userId = parseInt(data);
+  const user = await query.findOneUser({ id: userId });
+  if (validate.isEmpty(user.data)) {
+    return wrapper.error('can not find user')
   }
-  return user
+  return wrapper.data(user.data)
 }
 
 let listUsers = [
