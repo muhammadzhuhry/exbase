@@ -28,16 +28,16 @@ router.get('/:id', async (req, res) => {
 
   const getOneUser = async () => queriesDomain.getOneUser(userId);
   const sendResponse = async (result) => {
-    (result.err) ? res.json({
+    (result.error) ? res.json({
       status: false,
       message: `can not get user with id ${userId}`,
       code: 404,
-      data: result
+      data: result.data
     }) : res.json({
       status: true,
       message: `success get user with id ${userId}`,
       code: 200,
-      data: result
+      data: result.data
     });
   };
   sendResponse(await getOneUser());
