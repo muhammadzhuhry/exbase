@@ -3,8 +3,8 @@ const mongoConnection = require('./connection');
 const wrapper = require('../../utils/wrapper');
 
 class DB {
-  constructor(config) {
-    this.config = config;
+  constructor(mongodbURL) {
+    this.mongodbURL = mongodbURL;
   }
 
   setCollection(collectionName) {
@@ -12,20 +12,20 @@ class DB {
   }
 
   async getDatabase() {
-    const config = this.config.replace('//', '');
-    const pattern = new RegExp('/([a-zA-Z0-9-]+)?');
-    const dbName = pattern.exec(config);
+    const mongodbURL = this.mongodbURL.replace('//', '');
+    const pattern = new RegExp('/([a-zA-Z0-9-_]+)?');
+    const dbName = pattern.exec(mongodbURL);
     return dbName[1];
   }
 
   async findOne(parameter) {
     const dbName = await this.getDatabase();
-    console.log(dbName)
-    const result = await mongoConnection.getConnection(this.config);
+    const result = await mongoConnection.getConnection(this.mongodbURL);
     if (result.err) {
       console.log('error mongodb connection');
       return result;
     }
+
     try {
       const cacheConnection = result.data.db;
       const connection = cacheConnection.db(dbName);
@@ -42,3 +42,5 @@ class DB {
     }
   }
 }
+
+module.exports = DB;
