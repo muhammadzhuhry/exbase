@@ -21,7 +21,7 @@ class DB {
   async findOne(parameter) {
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
-    if (result.err) {
+    if (result.error) {
       console.log('error mongodb connection');
       return result;
     }
@@ -36,7 +36,7 @@ class DB {
       }
       return wrapper.data(recordset);
 
-    } catch (err) {
+    } catch (error) {
       console.log('error find data in mongodb');
       return wrapper.error(`error find one mongo ${err.message}`);
     }

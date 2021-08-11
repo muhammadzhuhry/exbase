@@ -1,6 +1,6 @@
-const data = (data) => ({ err: null, data});
+const data = (data) => ({ error: null, data});
 
-const error = (err) => ({ err, data: null });
+const error = (error) => ({ error, data: null });
 
 module.exports = {
   data,

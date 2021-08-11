@@ -47,7 +47,7 @@ const addConnectionPool = () => {
 const createConnectionPool = async () => {
   connectionPool.map(async (currentConnection, index) => {
     const result = await createConnection(currentConnection.config);
-    if (result.err) {
+    if (result.error) {
       connectionPool[index].db = currentConnection;
     } else {
       connectionPool[index].db = result.data;
@@ -86,7 +86,7 @@ const getConnection = async (config) => {
   let connectionIndex;
   const checkConnection = async () => {
     const result = await ifExistConnection(config);
-    if (result.err) {
+    if (result.error) {
       return result;
     }
     const connection = await isConnected(result.data);
@@ -95,14 +95,13 @@ const getConnection = async (config) => {
   };
   
   const result = await checkConnection();
-  if (result.err) {
+  if (result.error) {
     const state = await createConnection(config);
-    if (state.err) {
+    if (state.error) {
       return wrapper.data(connectionPool[connectionIndex]);
     }
     connectionPool[connectionIndex].db = state.data;
     return wrapper.data(connectionPool[connectionIndex]);
-
   }
   return result;
 };
