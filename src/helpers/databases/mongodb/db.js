@@ -38,7 +38,7 @@ class DB {
 
     } catch (error) {
       console.log('error find data in mongodb');
-      return wrapper.error(`error find one mongo ${err.message}`);
+      return wrapper.error(`error find one mongo ${error.message}`);
     }
   }
 }
