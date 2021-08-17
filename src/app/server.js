@@ -2,6 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const routes = require('../routes/handler');
 const logger = require('../helpers/utils/logger');
+const wrapper = require('../helpers/utils/wrapper');
 const mongodbConnectionPooling = require('../helpers/databases/mongodb/connection');
 
 const server = express();
@@ -15,9 +16,7 @@ server.use(logger.init());
 
 // root goes here
 server.get('/', (req, res) => {
-  res.json({
-    message: 'This service is running properly'
-  });
+  wrapper.response(res, 'success', wrapper.data('index'), 'this service is running properly');
 });
 
 // grouping route
