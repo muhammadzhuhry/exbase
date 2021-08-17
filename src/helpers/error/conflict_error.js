@@ -1,8 +1,10 @@
+const { ERROR:httpError } = require('../http-status/status-code');
+
 class ConflictError {
-  constructor(param = 'conflict') {
+  constructor(param = 'conflict', data) {
     this.message = param.message || param;
-    this.data = param.data;
-    this.code = param.code;
+    this.data = data;
+    this.code = httpError.CONFLICT;
   }
 }
 
