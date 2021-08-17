@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const routes = require('../routes/handler');
+const logger = require('../helpers/utils/logger');
 const mongodbConnectionPooling = require('../helpers/databases/mongodb/connection');
 
 const server = express();
@@ -10,6 +11,7 @@ server.use(cors({
   allowHeaders: ['Authorization'],
   exposeHeaders: ['Authorization']
 }));
+server.use(logger.init());
 
 // root goes here
 server.get('/', (req, res) => {
@@ -23,6 +25,5 @@ server.use('/api/v1', routes);
 
 // initiation goes here
 mongodbConnectionPooling.init();
-
 
 module.exports = server;
