@@ -3,6 +3,9 @@ const confidence = require('confidence');
 
 const config = {
   port: process.env.PORT,
+  name: process.env.NAME,
+  baseUrl: process.env.BASEURL,
+  env: process.env.MODE,
   mongodb: {
     url: process.env.MONGO_DATABASE_URL,
     maxPoolSize: process.env.MONGO_MAX_POOL_SIZE,
