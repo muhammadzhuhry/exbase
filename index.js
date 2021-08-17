@@ -1,7 +1,10 @@
 const app = require('./src/app/server');
 const config = require('./src/global_config');
+const logger = require('./src/helpers/utils/logger');
 
 const port = config.get('/port') || 1900;
 app.listen(port, () => {
-  console.log(`Listening: http://localhost:${port}`);
-})
+  const ctx = 'app-listen';
+  logger.log(ctx, `${config.get('/name')}-server started, listening at ${config.get('/baseUrl')}:${port}`, 
+    'initiate application');
+});

@@ -1,7 +1,7 @@
 {
   "name": "exbase",
   "version": "1.0.0",
-  "description": " A codebase for express with CQRS pattern",
+  "description": "A codebase for express with CQRS pattern",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -31,9 +31,12 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
+    "logform": "^2.2.0",
+    "moment": "^2.29.1",
     "mongodb": "^4.1.0",
-    "morgan": "^1.10.0",
-    "validate.js": "^0.13.1"
+    "morgan": "1.10.0",
+    "validate.js": "^0.13.1",
+    "winston": "3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
