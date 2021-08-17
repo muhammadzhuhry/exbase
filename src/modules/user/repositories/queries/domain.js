@@ -1,8 +1,10 @@
 const validate = require('validate.js');
 const Query = require('./query');
+const Model = require('./query_model');
 const config = require('../../../../global_config');
 const Mongo = require('../../../../helpers/databases/mongodb/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
+const { NotFoundError } = require('../../../../helpers/error');
 
 const mongodb = new Mongo(config.get('/mongodb').url);
 const query = new Query(mongodb);
@@ -12,17 +14,26 @@ const getUsers = async () => {
   if (users.err) {
     console.log('error');
   }
-  return users
-}
+  return users;
+};
 
 const getOneUser = async (data) => {
-  const userId = parseInt(data);
+  let userId, result;
+
+  userId = parseInt(data);
+
   const user = await query.findOneUser({ id: userId });
   if (validate.isEmpty(user.data)) {
-    return wrapper.error('can not find user')
+    return wrapper.error(new NotFoundError('can not find user', {}));
   }
-  return wrapper.data(user.data)
-}
+
+  result = Model.user();
+  result.userId = user.data.id;
+  result.name = user.data.name;
+  result.gender = user.data.gender;
+
+  return wrapper.data(result);
+};
 
 let listUsers = [
   {
@@ -50,9 +61,9 @@ let listUsers = [
     name: 'Eko Ridho Manrudi',
     gender: 'Male'
   }
-]
+];
 
 module.exports = {
   getUsers,
   getOneUser
-}
+};

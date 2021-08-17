@@ -12,7 +12,7 @@ const config = {
     newUrlParser: process.env.MONGO_NEW_URL_PARSER,
     unifiedTopology: process.env.MONGO_UNIFIED_TOPOLOGY
   }
-}
+};
 
 const store = new confidence.Store(config);
 
