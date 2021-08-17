@@ -1,5 +1,7 @@
 const { NotFoundError, InternalServerError, BadRequestError, ConflictError,
   ForbiddenError, UnauthorizedError } = require('../error');
+const { ERROR:httpError } = require('../http-status/status-code');
+
 
 const data = (data) => ({ error: null, data});
 
@@ -7,18 +9,18 @@ const error = (error) => ({ error, data: null });
 
 const response = (res, type, result, message = '', responseCode = 200) => {
  let status, data, code;
- 
+console.log(result);
  status = true;
  data = result.data;
  code = responseCode;
 
  if (type === 'fail') {
-   const errCode = checkErrorCode(result.err);
+   const errorCode = result.error.code;
    status = false;
    data = result.error.data || '';
-   message = result.error.message || message;
-   code = result.error.code
-   responseCode = errCode;
+   message = message;
+   code = errorCode;
+   responseCode = errorCode;
  }
 
  let modelResponse = {
@@ -29,25 +31,6 @@ const response = (res, type, result, message = '', responseCode = 200) => {
  };
 
  res.status(responseCode).send(modelResponse);
-}
-
-const checkErrorCode = (error) => {
-  switch (error.constructor) {
-  case BadRequestError:
-    return httpError.BAD_REQUEST;
-  case ConflictError:
-    return httpError.CONFLICT;
-  case ForbiddenError:
-    return httpError.FORBIDDEN;
-  case InternalServerError:
-    return httpError.INTERNAL_ERROR;
-  case NotFoundError:
-    return httpError.NOT_FOUND;
-  case UnauthorizedError:
-    return httpError.UNAUTHORIZED;
-  default:
-    return httpError.CONFLICT;
-  }
 };
 
 module.exports = {
