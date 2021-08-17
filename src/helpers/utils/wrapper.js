@@ -28,7 +28,7 @@ const response = (res, type, result, message = '', responseCode = 200) => {
   code
  };
 
- res.responseCode(responseCode, modelResponse);
+ res.status(responseCode).send(modelResponse);
 }
 
 const checkErrorCode = (error) => {
