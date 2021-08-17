@@ -1,5 +1,6 @@
 const express = require('express');
 const queriesDomain = require('../repositories/queries/domain');
+const wrapper = require('../../../helpers/utils/wrapper');
 
 const router = express.Router();
 
@@ -33,12 +34,7 @@ router.get('/:id', async (req, res) => {
       message: `can not get user with id ${userId}`,
       code: 404,
       data: result.data
-    }) : res.json({
-      status: true,
-      message: `success get user with id ${userId}`,
-      code: 200,
-      data: result.data
-    });
+    }) : wrapper.response(res, 'success', result, `success get user with id ${userId}`, 200);
   };
   sendResponse(await getOneUser());
 });
