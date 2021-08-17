@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 
   const getOneUser = async () => queriesDomain.getOneUser(userId);
   const sendResponse = async (result) => {
-    (result.error) ? wrapper.response(res, 'fail', result, `can not get user with id ${userId}`)  
+    (result.error) ? wrapper.response(res, 'fail', result, `can not get user with id ${userId}`, httpError.NOT_FOUND)
       : wrapper.response(res, 'success', result, `success get user with id ${userId}`, http.OK);
   };
   sendResponse(await getOneUser());
