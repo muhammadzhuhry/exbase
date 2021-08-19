@@ -12,7 +12,7 @@ const logger = winston.createLogger({
         return moment().format('YYYY-MM-DD HH:mm:ss');
       }
     }),
-    colorize({ colors: { info: 'blue' }}),
+    colorize({ colors: { info: 'blue', error: 'red' }}),
     printf(data => {
       return data.meta ? `${data.timestamp} [${data.level}]: method=${data.meta.method} url=${data.meta.url} code=${
         data.meta.code} contentLength=${data.meta.contentLength} responseTime=${data.meta.responseTime} ip=${data.meta.ip}` :

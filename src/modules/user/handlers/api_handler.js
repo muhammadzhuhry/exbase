@@ -9,17 +9,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   const getUsers = async () => queriesDomain.getUsers();
   const sendResponse = async (result) => {
-    (result.err) ? res.json({
-      status: false,
-      message: 'can not get list user',
-      code: 400,
-      data: result
-    }) : res.json({
-      status: true,
-      message: 'success get list user',
-      code: 200,
-      data: result
-    });
+    (result.error) ? wrapper.response(res, 'fail', result, 'can not get list user', httpError.NOT_FOUND)
+      : wrapper.response(res, 'success', result, 'success get list user', http.OK);
   };
   sendResponse(await getUsers());
 });

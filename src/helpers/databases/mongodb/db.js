@@ -1,5 +1,6 @@
 const validate = require('validate.js');
 const mongoConnection = require('./connection');
+const logger = require('../../utils/logger');
 const wrapper = require('../../utils/wrapper');
 
 class DB {
@@ -19,10 +20,11 @@ class DB {
   }
 
   async findOne(parameter) {
+    const ctx = 'mongodb-findOne';
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
     if (result.error) {
-      console.log('error mongodb connection');
+      logger.error(ctx, 'error mongodb connection', 'error');
       return result;
     }
 
@@ -37,9 +39,35 @@ class DB {
       return wrapper.data(recordset);
 
     } catch (error) {
-      console.log('error find data in mongodb');
-      return wrapper.error(`error find one mongo ${error.message}`);
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error find one mongodb ${error.message}`);
     }
+  }
+
+  async findMany(parameter) {
+    const ctx = 'mongodb-findMany';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.error) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const recordset = await db.find(parameter).toArray();
+      if (validate.isEmpty(recordset)) {
+        return wrapper.error('data not found please try another input');
+      }
+      return wrapper.data(recordset);
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error find many mongodb ${error.message}`);
+    }
+
   }
 }
 
