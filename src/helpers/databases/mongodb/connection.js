@@ -1,6 +1,7 @@
 const Mongo = require('mongodb').MongoClient;
 const validate = require('validate.js');
 const config = require('../../../global_config');
+const logger = require('../../utils/logger');
 const wrapper = require('../../utils/wrapper');
 
 const connectionPool = [];
@@ -27,10 +28,10 @@ const createConnection = async (mongodbURL) => {
 
   try {
     const connection = await Mongo.connect(mongodbURL, options);
-    console.log('success create connection');
+    logger.log('mongodb-createConnection', 'success create mongodb connection', 'info');
     return wrapper.data(connection);
   } catch (error) {
-    console.log('failed create connection', error.message);
+    logger.error('mongodb-createConnection', error.message, 'error');
     return wrapper.error(error.message);
   }
 };
