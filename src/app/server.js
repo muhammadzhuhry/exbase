@@ -1,5 +1,6 @@
 const cors = require('cors');
 const express = require('express');
+const config = require('../global_config');
 const routes = require('../routes/handler');
 const logger = require('../helpers/utils/logger');
 const wrapper = require('../helpers/utils/wrapper');
@@ -12,7 +13,8 @@ server.use(cors({
   allowHeaders: ['Authorization'],
   exposeHeaders: ['Authorization']
 }));
-server.use(logger.init());
+
+if (config.get('/mode') !== 'PRODUCTION') server.use(logger.init());
 
 // root goes here
 server.get('/', (req, res) => {
