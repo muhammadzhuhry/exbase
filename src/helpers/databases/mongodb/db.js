@@ -1,5 +1,6 @@
 const validate = require('validate.js');
 const mongoConnection = require('./connection');
+const logger = require('../../utils/logger');
 const wrapper = require('../../utils/wrapper');
 
 class DB {
@@ -19,10 +20,11 @@ class DB {
   }
 
   async findOne(parameter) {
+    const ctx = 'mongodb-findOne';
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
     if (result.error) {
-      console.log('error mongodb connection');
+      logger.error(ctx, 'error mongodb connection', 'error');
       return result;
     }
 
@@ -37,7 +39,7 @@ class DB {
       return wrapper.data(recordset);
 
     } catch (error) {
-      console.log('error find data in mongodb');
+      logger.error(ctx, error.message, 'error');
       return wrapper.error(`error find one mongo ${error.message}`);
     }
   }
