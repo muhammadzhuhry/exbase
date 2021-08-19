@@ -40,8 +40,34 @@ class DB {
 
     } catch (error) {
       logger.error(ctx, error.message, 'error');
-      return wrapper.error(`error find one mongo ${error.message}`);
+      return wrapper.error(`error find one mongodb ${error.message}`);
     }
+  }
+
+  async findMany(parameter) {
+    const ctx = 'mongodb-findMany';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.error) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const recordset = await db.find(parameter).toArray();
+      if (validate.isEmpty(recordset)) {
+        return wrapper.error('data not found please try another input');
+      }
+      return wrapper.data(recordset);
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error find many mongodb ${error.message}`);
+    }
+
   }
 }
 
