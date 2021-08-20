@@ -1,5 +1,7 @@
 const data = (data) => ({ error: null, data});
 
+const paginationData = (data, meta) => ({ err: null, data, meta });
+
 const error = (error) => ({ error, data: null });
 
 const response = (res, type, result, message = '', responseCode = 200) => {
@@ -30,6 +32,7 @@ const response = (res, type, result, message = '', responseCode = 200) => {
 
 module.exports = {
   data,
+  paginationData,
   error,
   response
 };
