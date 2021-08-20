@@ -44,7 +44,8 @@ class DB {
     }
   }
 
-  async findMany(parameter) {
+  // find all data with option exact parameter
+  async findAll(parameter) {
     const ctx = 'mongodb-findMany';
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
@@ -68,6 +69,36 @@ class DB {
       return wrapper.error(`error find many mongodb ${error.message}`);
     }
 
+  }
+
+  // find data with pagination with option sort and parameter
+  async findMany(fieldName, row, page, parameter) {
+    const ctx = 'mongodb-findAll';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.err) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const parameterSort = {};
+      parameterSort[fieldName] = -1;
+      const parameterPage = row * (page - 1);
+      const recordset = await db.find(parameter).sort(parameterSort).limit(row).skip(parameterPage)
+        .toArray();
+      if (validate.isEmpty(recordset)) {
+        return wrapper.error('data not found please try another input');
+      }
+      return wrapper.data(recordset);
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error find many mongodb ${error.message}`);
+    }
   }
 }
 
