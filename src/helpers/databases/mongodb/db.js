@@ -76,7 +76,7 @@ class DB {
     const ctx = 'mongodb-findAll';
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
-    if (result.err) {
+    if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
     }
@@ -98,6 +98,31 @@ class DB {
     } catch (error) {
       logger.error(ctx, error.message, 'error');
       return wrapper.error(`error find many mongodb ${error.message}`);
+    }
+  }
+
+  async countData(parameter) {
+    const ctx = 'mongodb-countData';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.error) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const recordset = await db.count(parameter);
+      if (validate.isEmpty(recordset)) {
+        return wrapper.error('data not found please try another input');
+      }
+      return wrapper.data(recordset);
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error count data mongodb ${error.message}`);
     }
   }
 }
