@@ -3,9 +3,9 @@ class Query {
     this.db = db;
   }
 
-  async findUsers(parameter) {
+  async findUsers(fieldName, row, page, parameter) {
     this.db.setCollection('users');
-    const recordset = await this.db.findMany(parameter);
+    const recordset = await this.db.findMany(fieldName, row, page, parameter);
     return recordset;
   }
 
