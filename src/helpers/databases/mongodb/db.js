@@ -151,6 +151,38 @@ class DB {
       return wrapper.error(`error insert one data mongodb ${error.message}`);
     }
   }
+
+  // modifiedCount : 0 => data created
+  // modifiedCount : 1 => data updated
+  async upsertOne(parameter, updateQuery) {
+    const ctx = 'mongodb-upsertOne';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.err) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const data = await db.updateOne(parameter, updateQuery, { upsert: true });
+      if (data.modifiedCount >= 0) {
+        const { modifiedCount } = data;
+        const recordset = await this.findOne(parameter);
+        if (modifiedCount === 0) {
+          return wrapper.data(recordset.data);
+        }
+        return wrapper.data(recordset.data);
+      }
+      return wrapper.error('failed upsert data');
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error upsert one data mongodb ${error.message}`);
+    }
+  }
 }
 
 module.exports = DB;
