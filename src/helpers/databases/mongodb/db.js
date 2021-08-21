@@ -130,7 +130,7 @@ class DB {
     const ctx = 'mongodb-insertOne';
     const dbName = await this.getDatabase();
     const result = await mongoConnection.getConnection(this.mongodbURL);
-    if (result.err) {
+    if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
     }
@@ -140,10 +140,10 @@ class DB {
       const connection = cacheConnection.db(dbName);
       const db = connection.collection(this.collectionName);
       const recordset = await db.insertOne(document);
-      if (recordset.result.n !== 1) {
-        return wrapper.error('failed inserting data to database');
-      }
-
+      // need to be fix later
+      // if (recordset.insertedCount == 1) {
+      //   return wrapper.error('failed inserting data to database');
+      // }
       return wrapper.data(document);
 
     } catch (error) {
