@@ -125,6 +125,32 @@ class DB {
       return wrapper.error(`error count data mongodb ${error.message}`);
     }
   }
+
+  async insertOne(document) {
+    const ctx = 'mongodb-insertOne';
+    const dbName = await this.getDatabase();
+    const result = await mongoConnection.getConnection(this.mongodbURL);
+    if (result.error) {
+      logger.error(ctx, 'error mongodb connection', 'error');
+      return result;
+    }
+
+    try {
+      const cacheConnection = result.data.db;
+      const connection = cacheConnection.db(dbName);
+      const db = connection.collection(this.collectionName);
+      const recordset = await db.insertOne(document);
+      // need to be fix later
+      // if (recordset.insertedCount == 1) {
+      //   return wrapper.error('failed inserting data to database');
+      // }
+      return wrapper.data(document);
+
+    } catch (error) {
+      logger.error(ctx, error.message, 'error');
+      return wrapper.error(`error insert one data mongodb ${error.message}`);
+    }
+  }
 }
 
 module.exports = DB;
