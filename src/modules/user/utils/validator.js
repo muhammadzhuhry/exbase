@@ -19,6 +19,24 @@ const validateInsertUser = async (payload) => {
   return wrapper.data(true);
 };
 
+const validateUpdateUser = async (payload) => {
+  const validSchema = Joi.object({
+    id: Joi.number().required(),
+    name: Joi.string().optional(),
+    gender: Joi.string().valid('Male', 'Female').optional()
+  });
+
+  const result = validSchema.validate(payload);
+
+  if (result.error) {
+    const message = result.error.details[0].message;
+    return wrapper.error(new BadRequestError(message));
+  }
+
+  return wrapper.data(true);
+};
+
 module.exports = {
-  validateInsertUser
+  validateInsertUser,
+  validateUpdateUser
 };
