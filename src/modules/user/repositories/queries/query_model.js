@@ -1,8 +1,10 @@
 const user = () => {
   const model = {
-    userId: '',
+    id: 0,
     name: '',
-    gender: ''
+    gender: '',
+    createdAt: '',
+    updatedAt: ''
   };
 
   return model;
