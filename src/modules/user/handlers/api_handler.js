@@ -3,7 +3,7 @@ const commandsDomain = require('../repositories/commands/domain');
 const queriesDomain = require('../repositories/queries/domain');
 const validator = require('../utils/validator');
 const wrapper = require('../../../helpers/utils/wrapper');
-const { ERROR:httpError, SUCCESS:http } = require('../../../helpers/http-status/status-code');
+const { SUCCESS:http } = require('../../../helpers/http-status/status-code');
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
 
   const getOneUser = async () => queriesDomain.getOneUser(userId);
   const sendResponse = async (result) => {
-    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, httpError.NOT_FOUND)
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
       : wrapper.response(res, 'success', result, `success get user with id ${userId}`, http.OK);
   };
   sendResponse(await getOneUser());
@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
 
   const getUsers = async () => queriesDomain.getUsers(payload);
   const sendResponse = async (result) => {
-    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, httpError.NOT_FOUND)
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
       : wrapper.paginationResponse(res, 'success', result, 'success get list user', http.OK);
   };
   sendResponse(await getUsers());
@@ -48,10 +48,34 @@ router.post('/', async (req, res) => {
   };
 
   const sendResponse = async (result) => {
-    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, httpError.NOT_FOUND)
-      : wrapper.paginationResponse(res, 'success', result, 'success insert user', http.OK);
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.paginationResponse(res, 'success', result, 'success insert user', http.CREATED);
   };
   sendResponse(await postUser(validatePayload));
+});
+
+// hander update user
+router.put('/:id', async (req, res) => {
+  const userId = req.params.id;
+  const payload = { ...req.body };
+  const schema = {
+    ...req.params,
+    ...req.body
+  };
+
+  const validatePayload = await validator.validateUpdateUser(schema);
+  const putUser = async (result) => {
+    if (result.error) {
+      return result;
+    }
+    return await commandsDomain.updateUser(userId, payload);
+  };
+
+  const sendResponse = async (result) => {
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.paginationResponse(res, 'success', result, `success update user with id ${userId}`, http.OK);
+  };
+  sendResponse(await putUser(validatePayload));
 });
 
 module.exports = router;
