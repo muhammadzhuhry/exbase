@@ -44,10 +44,10 @@ npm install
 npm run lint
 ```
 
-## Test
+## Lint Fix
 
 ```
-npm run test
+npm run lint:fix
 ```
 
 ## Development
