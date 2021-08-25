@@ -8,12 +8,18 @@
 
 Includes API Server utilities:
 
-* [morgan](https://www.npmjs.com/package/morgan)
-  * HTTP request logger middleware for node.js
-* [helmet](https://www.npmjs.com/package/helmet)
-  * Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
+* [@hapi/joi](https://www.npmjs.com/package/@hapi/joi)
+  * The most powerful schema description language and data validator for JavaScript!
+* [confidence](https://www.npmjs.com/package/confidence)
+  * Configuration document format, an API, and a foundation for A/B testing
+* [cors](https://www.npmjs.com/package/cors)
+  * CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options
 * [dotenv](https://www.npmjs.com/package/dotenv)
   * Dotenv is a zero-dependency module that loads environment variables from a `.env` file into `process.env`
+* [morgan](https://www.npmjs.com/package/morgan)
+  * HTTP request logger middleware for node.js
+* [winston](https://www.npmjs.com/package/winston)
+  * A logger for just about everything.
 
 Development utilities:
 
