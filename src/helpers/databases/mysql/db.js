@@ -7,7 +7,7 @@ class DB {
     this.config = config;
   }
 
-  async query(statement) {
+  async query(statement,  escape = null) {
     let db = await mysqlPool.getConnection(this.config);
     if(validate.isEmpty(db)){
       db = await mysqlPool.createConnectionPool(this.config);
@@ -26,20 +26,21 @@ class DB {
             if (error.code === 'ECONNREFUSED') {
               errorMessage = 'DB connection was refused.';
             }
-            connection.release();
-            reject(wrapper.error(errorMessage));
-          } else {
-            connection.query(statement, (error, result) => {
-              if (error) {
-                connection.release();
-                reject(wrapper.error(error.message));
-              }
-              else {
-                connection.release();
-                resolve(wrapper.data(result));
-              }
-            });
+            if (connection) {
+              connection.release();
+            }
+            return reject(wrapper.error(errorMessage));
           }
+
+          connection.query(statement, escape, (error, result) => {
+            if (error) {
+              connection.release();
+              return reject(wrapper.error(error.message));
+            }
+
+            connection.release();
+            return resolve(wrapper.data(result));
+          });
         });
       });
     };
