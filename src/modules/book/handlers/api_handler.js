@@ -21,6 +21,18 @@ router.get('/:id', async (req, res) => {
   sendResponse(await getOneBook());
 });
 
+// handler get list book
+router.get('/', async (req, res) => {
+  const payload = { ...req.query };
+
+  const getUsers = async () => queriesDomain.getBooks(payload);
+  const sendResponse = async (result) => {
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.paginationResponse(res, 'success', result, 'success get list book', http.OK);
+  };
+  sendResponse(await getUsers());
+});
+
 // COMMANDS
 
 // handler insert book
