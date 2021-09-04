@@ -1,5 +1,6 @@
 const book = () => {
   const model = {
+    id: '',
     title: '',
     author: '',
     description: '',
