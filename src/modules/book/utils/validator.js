@@ -19,6 +19,26 @@ const validateInsertBook = async (payload) => {
   return wrapper.data(true);
 };
 
+const validateUpdateBook = async (payload) => {
+  const validSchema = Joi.object({
+    id: Joi.string().required(),
+    title: Joi.string().optional(),
+    author: Joi.string().optional(),
+    description: Joi.string().optional()
+  });
+
+  const result = validSchema.validate(payload);
+
+  if (result.error) {
+    const message = result.error.details[0].message;
+    return wrapper.error(new BadRequestError(message));
+  }
+
+  return wrapper.data(true);
+};
+
+
 module.exports = {
-  validateInsertBook
+  validateInsertBook,
+  validateUpdateBook
 };
