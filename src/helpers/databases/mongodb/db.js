@@ -1,5 +1,5 @@
 const validate = require('validate.js');
-const mongoConnection = require('./connection');
+const mongoPool = require('./connection');
 const logger = require('../../utils/logger');
 const wrapper = require('../../utils/wrapper');
 
@@ -22,7 +22,7 @@ class DB {
   async findOne(parameter) {
     const ctx = 'mongodb-findOne';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
@@ -48,7 +48,7 @@ class DB {
   async findAll(parameter) {
     const ctx = 'mongodb-findMany';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
@@ -75,7 +75,7 @@ class DB {
   async findMany(fieldName, row, page, parameter) {
     const ctx = 'mongodb-findAll';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
@@ -104,7 +104,7 @@ class DB {
   async countData(parameter) {
     const ctx = 'mongodb-countData';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
@@ -129,7 +129,7 @@ class DB {
   async insertOne(document) {
     const ctx = 'mongodb-insertOne';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.error) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
@@ -157,7 +157,7 @@ class DB {
   async upsertOne(parameter, updateQuery) {
     const ctx = 'mongodb-upsertOne';
     const dbName = await this.getDatabase();
-    const result = await mongoConnection.getConnection(this.mongodbURL);
+    const result = await mongoPool.getConnection(this.mongodbURL);
     if (result.err) {
       logger.error(ctx, 'error mongodb connection', 'error');
       return result;
