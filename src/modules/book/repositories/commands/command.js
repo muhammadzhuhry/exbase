@@ -9,6 +9,13 @@ class Query {
     const result = await this.db.query(query, valueData);
     return result;
   }
+
+  async updateBook(data) {
+    const valueData = [data.title, data.author, data.description, data.updatedAt];
+    const query = 'UPDATE tbl_books SET title = ?, author = ?, description = ?, updatedAt = ?';
+    const result = await this.db.query(query, valueData);
+    return result;
+  }
 }
 
 module.exports = Query;
