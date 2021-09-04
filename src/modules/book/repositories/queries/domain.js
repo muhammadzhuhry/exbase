@@ -20,6 +20,7 @@ const getOneBook = async (data) => {
   }
 
   result = Model.book();
+  result.id = book.data[0].id;
   result.title = book.data[0].title;
   result.author = book.data[0].author;
   result.description = book.data[0].description;
@@ -29,6 +30,47 @@ const getOneBook = async (data) => {
   return wrapper.data(result);
 };
 
+const getBooks = async (data) => {
+  let payload = {}, result = [], metadata;
+
+  if (data.page == 0) {
+    return wrapper.error(new BadRequestError('page must start from 1', []));
+  }
+
+  payload.page = parseInt(data.page) || 1;
+  payload.size = parseInt(data.size) || 10;
+
+  const books = await query.findBooks(payload);
+  if (validate.isEmpty(books.data)) {
+    return wrapper.error(new NotFoundError('can not find book', []));
+  }
+
+  books.data.map(data => {
+    const book = Model.book();
+    book.id = data.id;
+    book.title = data.title;
+    book.author = data.author;
+    book.description = data.description;
+    book.createdAt = data.createdAt;
+    book.updatedAt = data.updatedAt;
+
+    result.push(book);
+  });
+
+  const countBooks = await query.countBooks();
+  const size = books.data.length;
+
+  metadata = {
+    page: payload.page,
+    size: result.length,
+    totalPage: Math.ceil(countBooks.data[0].total / size),
+    totalData: countBooks.data[0].total
+  };
+
+  return wrapper.paginationData(result, metadata);
+};
+
 module.exports = {
-  getOneBook
+  getOneBook,
+  getBooks
 };
