@@ -11,7 +11,7 @@ const config = {
       username: process.env.BASIC_AUTH_USERNAME,
       password: process.env.BASIC_AUTH_PASSWORD
     }
-],
+  ],
   mongodb: {
     url: process.env.MONGO_DATABASE_URL,
     maxPoolSize: process.env.MONGO_MAX_POOL_SIZE,
