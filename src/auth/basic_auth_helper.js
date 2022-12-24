@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { BasicStrategy } = require('passport-http');
-const config = require('../global_config');
+const config = require('../config');
 
 class User {
   constructor(username, password) {

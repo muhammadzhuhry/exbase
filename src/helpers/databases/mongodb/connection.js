@@ -1,6 +1,6 @@
 const Mongo = require('mongodb').MongoClient;
 const validate = require('validate.js');
-const config = require('../../../global_config');
+const config = require('../../../config');
 const logger = require('../../utils/logger');
 const wrapper = require('../../utils/wrapper');
 

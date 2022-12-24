@@ -1,6 +1,6 @@
 const cors = require('cors');
 const express = require('express');
-const config = require('../global_config');
+const config = require('../config');
 const routes = require('../routes/handler');
 const logger = require('../helpers/utils/logger');
 const wrapper = require('../helpers/utils/wrapper');

@@ -1,7 +1,7 @@
 const validate = require('validate.js');
 const Query = require('./query');
 const Model = require('./query_model');
-const config = require('../../../../global_config');
+const config = require('../../../../config');
 const Mongo = require('../../../../helpers/databases/mongodb/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
 const { NotFoundError, BadRequestError } = require('../../../../helpers/error');
