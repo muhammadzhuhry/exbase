@@ -28,7 +28,7 @@ const createConnection = async (mongodbURL) => {
 
   try {
     const connection = await Mongo.connect(mongodbURL, options);
-    logger.log('mongodb-createConnection', 'success create mongodb connection', 'info');
+    logger.info('mongodb-createConnection', 'success create mongodb connection', 'info');
     return wrapper.data(connection);
   } catch (error) {
     logger.error('mongodb-createConnection', error.message, 'error');

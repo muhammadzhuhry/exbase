@@ -5,6 +5,6 @@ const logger = require('./src/helpers/utils/logger');
 const port = config.get('/port') || 8000;
 app.listen(port, () => {
   const ctx = 'app-listen';
-  logger.log(ctx, `${config.get('/name')}-server started, listening at ${config.get('/baseUrl')}:${port}`,
+  logger.info(ctx, `${config.get('/name')}-service started, listening at ${config.get('/baseUrl')}:${port}`,
     'initiate application');
 });
