@@ -3,6 +3,9 @@ const morgan  = require('morgan');
 const winston = require('winston');
 const logform = require('logform');
 const { combine, timestamp, label, printf, colorize } = logform.format;
+const config = require('../../config');
+
+const service = config.get('/name') + '-service';
 
 const logger = winston.createLogger({
   format: combine(
@@ -14,9 +17,9 @@ const logger = winston.createLogger({
     }),
     colorize({ colors: { info: 'blue', error: 'red' }}),
     printf(data => {
-      return data.meta ? `${data.timestamp} [${data.level}]: method=${data.meta.method} url=${data.meta.url} code=${
+      return data.meta ? `${data.timestamp} [${data.level}]: serviceApi=${data.serviceApi} method=${data.meta.method} url=${data.meta.url} code=${
         data.meta.code} contentLength=${data.meta.contentLength} responseTime=${data.meta.responseTime} ip=${data.meta.ip}` :
-        `${data.timestamp} [${data.level}]: context=${data.context} scope=${data.scope} message=${data.message}`;
+        `${data.timestamp} [${data.level}]: serviceApi=${data.serviceApi} context=${data.context} scope=${data.scope} message=${data.message}`;
     })
   ),
   transports: [new winston.transports.Console()],
@@ -27,18 +30,18 @@ const error = (context, message, scope, meta) => {
   const obj = {
     context,
     scope,
-    serviceApi : 'exbase-service',
+    serviceApi : service,
     message: message,
     meta
   };
   logger.error(obj);
 };
 
-const log = (context, message, scope) => {
+const info = (context, message, scope) => {
   const obj = {
     context,
     scope,
-    serviceApi : 'exbase-service',
+    serviceApi : service,
     message: message.toString()
   };
   logger.info(obj);
@@ -68,7 +71,7 @@ const init = () => {
 };
 
 module.exports = {
-  log,
+  info,
   error,
   init
 };
