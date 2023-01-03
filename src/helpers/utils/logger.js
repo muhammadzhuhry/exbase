@@ -30,7 +30,7 @@ const error = (context, message, scope, meta) => {
   const obj = {
     context,
     scope,
-    serviceApi : service,
+    serviceApi: service,
     message: message,
     meta
   };
@@ -41,7 +41,7 @@ const info = (context, message, scope) => {
   const obj = {
     context,
     scope,
-    serviceApi : service,
+    serviceApi: service,
     message: message.toString()
   };
   logger.info(obj);
@@ -63,7 +63,7 @@ const init = () => {
       context: 'service-info',
       scope: 'audit-log',
       message: 'logging service...',
-      serviceApi : service,
+      serviceApi: service,
       meta: logData
     };
     logger.info(obj);
