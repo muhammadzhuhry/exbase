@@ -1,11 +1,10 @@
 const user = () => {
   const model = {
-    id: 0,
     name: '',
-    gender: '',
-    isActive: 0, // false
-    createdAt: '',
-    updatedAt: ''
+    email: '',
+    is_active: 0, // false
+    created_at: '',
+    updated_at: ''
   };
 
   return model;
