@@ -63,6 +63,7 @@ const init = () => {
       context: 'service-info',
       scope: 'audit-log',
       message: 'logging service...',
+      serviceApi : service,
       meta: logData
     };
     logger.info(obj);
