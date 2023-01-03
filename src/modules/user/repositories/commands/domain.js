@@ -4,27 +4,29 @@ const Command = require('./command');
 const Query = require('../queries/query');
 const Model = require('./command_model');
 const config = require('../../../../config');
-const Mongo = require('../../../../helpers/databases/mongodb/db');
+const logger = require('../../../../helpers/utils/logger');
+const Mysql = require('../../../../helpers/databases/mysql/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
-const { InternalServerError, NotFoundError } = require('../../../../helpers/error');
+const { InternalServerError, NotFoundError, BadRequestError } = require('../../../../helpers/error');
 
-const mongodb = new Mongo(config.get('/mongodb').url);
-const command = new Command(mongodb);
-const query = new Query(mongodb);
+const mysqldb = new Mysql(config.get('/mysql'));
+const command = new Command(mysqldb);
+const query = new Query(mysqldb);
 
 const insertUser = async (data) => {
+  const ctx = 'domain-insertUser';
   let payload = { ...data };
 
   let user = Model.user();
-  user.id = payload.id;
   user.name = payload.name;
-  user.gender = payload.gender;
-  user.createdAt = dateFormat(new Date(), 'isoDateTime');
-  user.updatedAt = dateFormat(new Date(), 'isoDateTime');
+  user.email = payload.email;
+  user.created_at = dateFormat(new Date(), 'isoDateTime');
+  user.updated_at = dateFormat(new Date(), 'isoDateTime');
 
   const insert = await command.insertUser(user);
   if (insert.error) {
-    return wrapper.error(new InternalServerError('failed insert user', {}));
+    logger.error(ctx, insert.error, 'error');
+    return wrapper.error(new BadRequestError('failed insert user', {}));
   }
 
   return wrapper.data(user);
