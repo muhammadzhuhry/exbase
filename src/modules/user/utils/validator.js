@@ -5,7 +5,8 @@ const { BadRequestError } = require('../../../helpers/error');
 const validateInsertUser = async (payload) => {
   const validSchema = Joi.object({
     name: Joi.string().required(),
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
   });
 
   const result = validSchema.validate(payload);
