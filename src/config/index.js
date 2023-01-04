@@ -6,6 +6,11 @@ const config = {
   name: process.env.NAME,
   baseUrl: process.env.BASEURL,
   mode: process.env.MODE,
+  cipher: {
+    algorithm: process.env.CIPHER_ALGORITHM,
+    ivLength: parseInt(process.env.CIPHER_IV_LENGTH),
+    key: process.env.CIPHER_KEY
+  },
   basicAuth: [
     {
       username: process.env.BASIC_AUTH_USERNAME,
