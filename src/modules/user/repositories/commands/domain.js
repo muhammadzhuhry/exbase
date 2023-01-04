@@ -4,29 +4,35 @@ const Command = require('./command');
 const Query = require('../queries/query');
 const Model = require('./command_model');
 const config = require('../../../../config');
+const utils = require('../../../../helpers/utils/common');
 const logger = require('../../../../helpers/utils/logger');
 const Mysql = require('../../../../helpers/databases/mysql/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
 const { InternalServerError, NotFoundError, BadRequestError } = require('../../../../helpers/error');
 
+const algorithm = config.get('/cipher/algorithm');
+const secretKey = config.get('/cipher/key');
+
 const mysqldb = new Mysql(config.get('/mysql'));
 const command = new Command(mysqldb);
 const query = new Query(mysqldb);
 
-const insertUser = async (data) => {
-  const ctx = 'domain-insertUser';
+const registerUser = async (data) => {
+  const ctx = 'domain-registerUser';
   let payload = { ...data };
 
+  const encryptedPassword = await utils.encryptIV(payload.password, algorithm, secretKey);
   let user = Model.user();
   user.name = payload.name;
   user.email = payload.email;
+  user.password = encryptedPassword;
   user.created_at = dateFormat(new Date(), 'isoDateTime');
   user.updated_at = dateFormat(new Date(), 'isoDateTime');
 
-  const insert = await command.insertUser(user);
+  const insert = await command.registerUser(user);
   if (insert.error) {
     logger.error(ctx, insert.error, 'error');
-    return wrapper.error(new BadRequestError('failed insert user', {}));
+    return wrapper.error(new BadRequestError('failed register user', {}));
   }
 
   return wrapper.data(user);
@@ -51,6 +57,6 @@ const updateUser = async (id, data) => {
 };
 
 module.exports = {
-  insertUser,
+  registerUser,
   updateUser
 };

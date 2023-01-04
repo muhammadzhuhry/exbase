@@ -3,9 +3,9 @@ class Query {
     this.mysql = mysql;
   }
 
-  async insertUser(payload) {
-    const valueData = [payload.name, payload.email, payload.is_active, payload.created_at, payload.updated_at];
-    const query = 'INSERT INTO Users (name, email, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?)';
+  async registerUser(payload) {
+    const valueData = [payload.name, payload.email, payload.password, payload.is_active, payload.created_at, payload.updated_at];
+    const query = 'INSERT INTO Users (name, email, password, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)';
     const result = await this.mysql.preparedQuery(query, valueData);
     return result;
   }

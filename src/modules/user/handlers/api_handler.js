@@ -37,7 +37,7 @@ const getOneUser = async (req, res) => {
 // COMMANDS
 
 // hander insert user
-const insertUser = async (req, res) => {
+const registerUser = async (req, res) => {
   const payload = { ...req.body };
 
   const validatePayload = await validator.validateInsertUser(payload);
@@ -45,12 +45,12 @@ const insertUser = async (req, res) => {
     if (result.error) {
       return result;
     }
-    return await commandsDomain.insertUser(payload);
+    return await commandsDomain.registerUser(payload);
   };
 
   const sendResponse = async (result) => {
     (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
-      : wrapper.paginationResponse(res, 'success', result, 'success insert user', http.CREATED);
+      : wrapper.paginationResponse(res, 'success', result, 'success register user', http.CREATED);
   };
   sendResponse(await postUser(validatePayload));
 };
@@ -83,6 +83,6 @@ module.exports = {
   root,
   getUsers,
   getOneUser,
-  insertUser,
+  registerUser,
   updateUser
 };
