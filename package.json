@@ -25,12 +25,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "confidence": "^5.0.1",
     "cors": "^2.8.5",
     "dateformat": "^4.5.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "joi": "^17.7.0",
     "logform": "^2.2.0",
     "moment": "^2.29.1",
     "mongodb": "^4.1.0",
