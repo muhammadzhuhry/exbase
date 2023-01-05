@@ -10,10 +10,10 @@ class Query {
     return result;
   }
 
-  async updateUser(parameter, document){
-    this.db.setCollection('users');
-    const updateData = {$set : document};
-    const result = await this.db.upsertOne(parameter, updateData);
+  async updateUser(payload) {
+    const valueData = [payload.name, payload.email, payload.updated_at, payload.id];
+    const query = 'UPDATE Users SET name = ?, email = ?, updated_at = ? WHERE id = ?';
+    const result = await this.mysql.preparedQuery(query, valueData);
     return result;
   }
 }

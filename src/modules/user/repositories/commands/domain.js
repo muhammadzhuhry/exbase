@@ -38,22 +38,16 @@ const registerUser = async (data) => {
   return wrapper.data(user);
 };
 
-const updateUser = async (id, data) => {
+const updateUser = async (data) => {
   let payload = { ...data };
-  const userId = parseInt(id);
 
-  const user = await query.findOneUser({ id: userId });
-  if (validate.isEmpty(user.data)) {
-    return wrapper.error(new NotFoundError(`can not find user with id ${userId}`, {}));
-  }
-
-  payload.updatedAt = dateFormat(new Date(), 'isoDateTime');
-  const update = await command.updateUser({ id: userId }, payload);
+  payload.updated_at = dateFormat(new Date(), 'isoDateTime');
+  const update = await command.updateUser(payload);
   if (update.error) {
-    return wrapper.error(new InternalServerError(`failed update user with id ${userId}`, {}));
+    return wrapper.error(new InternalServerError(`failed update user with id ${payload.id}`, {}));
   }
 
-  return wrapper.data(update.data);
+  return wrapper.data({ 'changedRows': update.data.changedRows });
 };
 
 module.exports = {

@@ -57,24 +57,22 @@ const registerUser = async (req, res) => {
 
 // hander update user
 const updateUser = async (req, res) => {
-  const userId = req.params.id;
-  const payload = { ...req.body };
-  const schema = {
+  const payload = {
     ...req.params,
     ...req.body
   };
 
-  const validatePayload = await validator.validateUpdateUser(schema);
+  const validatePayload = await validator.validateUpdateUser(payload);
   const putUser = async (result) => {
     if (result.error) {
       return result;
     }
-    return await commandsDomain.updateUser(userId, payload);
+    return await commandsDomain.updateUser(payload);
   };
 
   const sendResponse = async (result) => {
     (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
-      : wrapper.paginationResponse(res, 'success', result, `success update user with id ${userId}`, http.OK);
+      : wrapper.paginationResponse(res, 'success', result, `success update user with id ${req.params.id}`, http.OK);
   };
   sendResponse(await putUser(validatePayload));
 };
