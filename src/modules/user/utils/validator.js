@@ -22,8 +22,8 @@ const validateInsertUser = async (payload) => {
 const validateUpdateUser = async (payload) => {
   const validSchema = Joi.object({
     id: Joi.number().required(),
-    name: Joi.string().optional(),
-    gender: Joi.string().valid('Male', 'Female').optional()
+    name: Joi.string().required(),
+    email: Joi.string().email().required()
   });
 
   const result = validSchema.validate(payload);
