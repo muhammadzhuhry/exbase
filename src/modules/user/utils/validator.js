@@ -1,42 +1,20 @@
-const Joi = require('@hapi/joi');
+const validate = require('validate.js');
 const wrapper = require('../../../helpers/utils/wrapper');
 const { BadRequestError } = require('../../../helpers/error');
 
-const validateInsertUser = async (payload) => {
-  const validSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required()
-  });
-
-  const result = validSchema.validate(payload);
-
-  if (result.error) {
-    const message = result.error.details[0].message;
-    return wrapper.error(new BadRequestError(message));
+const isValidPayload = (payload, constraint) => {
+  if (!payload) {
+    return wrapper.error(new BadRequestError('payload is empty'));
   }
 
-  return wrapper.data(true);
-};
-
-const validateUpdateUser = async (payload) => {
-  const validSchema = Joi.object({
-    id: Joi.number().required(),
-    name: Joi.string().required(),
-    email: Joi.string().email().required()
-  });
-
-  const result = validSchema.validate(payload);
-
-  if (result.error) {
-    const message = result.error.details[0].message;
-    return wrapper.error(new BadRequestError(message));
+  const { value, error } = constraint.validate(payload);
+  if (!validate.isEmpty(error)) {
+    return wrapper.error(new BadRequestError(error.details[0].message));
   }
 
-  return wrapper.data(true);
+  return wrapper.data(value, 'success', 200);
 };
 
 module.exports = {
-  validateInsertUser,
-  validateUpdateUser
+  isValidPayload
 };

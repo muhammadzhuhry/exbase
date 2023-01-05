@@ -1,5 +1,19 @@
+const Joi = require('joi');
+
+const registerUserSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required()
+});
+
+const updateUserSchema = Joi.object({
+  id: Joi.number().required(),
+  name: Joi.string().required(),
+  email: Joi.string().email().required()
+});
+
 const user = () => {
-  const model = {
+  return {
     name: '',
     email: '',
     password: '',
@@ -7,10 +21,10 @@ const user = () => {
     created_at: '',
     updated_at: ''
   };
-
-  return model;
 };
 
 module.exports = {
-  user
+  user,
+  registerUserSchema,
+  updateUserSchema
 };

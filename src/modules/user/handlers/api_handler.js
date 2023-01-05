@@ -2,6 +2,7 @@ const commandsDomain = require('../repositories/commands/domain');
 const queriesDomain = require('../repositories/queries/domain');
 const validator = require('../utils/validator');
 const wrapper = require('../../../helpers/utils/wrapper');
+const commandModel = require('../repositories/commands/command_model');
 const { SUCCESS:http } = require('../../../helpers/http-status/status-code');
 
 const root = async (req, res) => {
@@ -40,7 +41,7 @@ const getOneUser = async (req, res) => {
 const registerUser = async (req, res) => {
   const payload = { ...req.body };
 
-  const validatePayload = await validator.validateInsertUser(payload);
+  const validatePayload = await validator.isValidPayload(payload, commandModel.registerUserSchema);
   const postUser = async (result) => {
     if (result.error) {
       return result;
@@ -62,7 +63,7 @@ const updateUser = async (req, res) => {
     ...req.body
   };
 
-  const validatePayload = await validator.validateUpdateUser(payload);
+  const validatePayload = await validator.isValidPayload(payload, commandModel.updateUserSchema);
   const putUser = async (result) => {
     if (result.error) {
       return result;
