@@ -36,11 +36,13 @@ const registerUser = async (data) => {
 };
 
 const updateUser = async (data) => {
+  const ctx = 'domain-updateUser';
   let payload = { ...data };
 
   payload.updated_at = dateFormat(new Date(), 'isoDateTime');
   const update = await command.updateUser(payload);
   if (update.error) {
+    logger.error(ctx, update.error, 'error');
     return wrapper.error(new InternalServerError(`failed update user with id ${payload.id}`, {}));
   }
 
