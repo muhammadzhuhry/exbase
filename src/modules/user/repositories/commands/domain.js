@@ -1,21 +1,18 @@
 const dateFormat = require('dateformat');
-const validate = require('validate.js');
 const Command = require('./command');
-const Query = require('../queries/query');
 const Model = require('./command_model');
 const config = require('../../../../config');
 const utils = require('../../../../helpers/utils/common');
 const logger = require('../../../../helpers/utils/logger');
 const Mysql = require('../../../../helpers/databases/mysql/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
-const { InternalServerError, NotFoundError, BadRequestError } = require('../../../../helpers/error');
+const { InternalServerError, BadRequestError } = require('../../../../helpers/error');
 
 const algorithm = config.get('/cipher/algorithm');
 const secretKey = config.get('/cipher/key');
 
 const mysqldb = new Mysql(config.get('/mysql'));
 const command = new Command(mysqldb);
-const query = new Query(mysqldb);
 
 const registerUser = async (data) => {
   const ctx = 'domain-registerUser';
