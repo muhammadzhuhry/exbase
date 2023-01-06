@@ -17,6 +17,18 @@ const config = {
       password: process.env.BASIC_AUTH_PASSWORD
     }
   ],
+  jwt: {
+    privateKey: process.env.PRIVATE_KEY,
+    signOptions: {
+      expiresIn: process.env.JWT_EXPIRATION_TIME
+    },
+    refresh: {
+      privateKey: process.env.REFRESH_PRIVATE_KEY,
+      signOptions: {
+        expiresIn: process.env.REFRESH_JWT_EXPIRATION_TIME
+      }
+    },
+  },
   mongodb: {
     url: process.env.MONGO_DATABASE_URL,
     maxPoolSize: process.env.MONGO_MAX_POOL_SIZE,
