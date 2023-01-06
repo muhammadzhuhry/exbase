@@ -1,18 +1,22 @@
+const validate = require('validate.js');
 const dateFormat = require('dateformat');
 const Command = require('./command');
+const Query = require('../queries/query');
 const Model = require('./command_model');
 const config = require('../../../../config');
 const utils = require('../../../../helpers/utils/common');
 const logger = require('../../../../helpers/utils/logger');
+const jwtAuth = require('../../../../auth/jwt_auth_helper');
 const Mysql = require('../../../../helpers/databases/mysql/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
-const { InternalServerError, BadRequestError } = require('../../../../helpers/error');
+const { InternalServerError, NotFoundError, BadRequestError, UnauthorizedError } = require('../../../../helpers/error');
 
 const algorithm = config.get('/cipher/algorithm');
 const secretKey = config.get('/cipher/key');
 
 const mysqldb = new Mysql(config.get('/mysql'));
 const command = new Command(mysqldb);
+const query = new Query(mysqldb);
 
 const registerUser = async (data) => {
   const ctx = 'domain-registerUser';
@@ -49,7 +53,33 @@ const updateUser = async (data) => {
   return wrapper.data({ 'changedRows': update.data.changedRows });
 };
 
+const loginUser = async (data) => {
+  const ctx = 'domain-loginUser';
+  let payload = { ...data };
+
+  const user = await query.findUserByEmail(payload.email);
+  if (user.error || validate.isEmpty(user.data)) {
+    logger.error(ctx, user.error, 'error');
+    return wrapper.error(new NotFoundError('user not found'));
+  }
+
+  const decryptedPassword = await utils.decryptIV(user.data[0].password, algorithm, secretKey);
+  if (decryptedPassword !== payload.password) {
+    logger.info(ctx, 'password invalid!', 'error');
+    return wrapper.error(new UnauthorizedError('password invalid!'));
+  }
+
+  const accessToken = await jwtAuth.generateToken(payload);
+  const refreshToken = await jwtAuth.generateRefreshToken(payload);
+
+  return wrapper.data({
+    accessToken,
+    refreshToken
+  });
+};
+
 module.exports = {
   registerUser,
-  updateUser
+  updateUser,
+  loginUser
 };

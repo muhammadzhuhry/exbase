@@ -78,10 +78,30 @@ const updateUser = async (req, res) => {
   sendResponse(await putUser(validatePayload));
 };
 
+// hander login user
+const loginUser = async (req, res) => {
+  const payload = { ...req.body };
+
+  const validatePayload = await validator.isValidPayload(payload, commandModel.loginSchema);
+  const postUser = async (result) => {
+    if (result.error) {
+      return result;
+    }
+    return await commandsDomain.loginUser(payload);
+  };
+
+  const sendResponse = async (result) => {
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.paginationResponse(res, 'success', result, 'success loggedin', http.OK);
+  };
+  sendResponse(await postUser(validatePayload));
+};
+
 module.exports = {
   root,
   getUsers,
   getOneUser,
   registerUser,
-  updateUser
+  updateUser,
+  loginUser
 };
