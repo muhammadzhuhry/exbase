@@ -14,7 +14,7 @@ const getOneUser = async (data) => {
 
   const user = await query.findUserByEmail(email);
   if (user.error || validate.isEmpty(user.data)) {
-    return wrapper.error(new NotFoundError(`can not find user with email ${email}`, {}));
+    return wrapper.error(new NotFoundError(`can not find user with email ${email}`));
   }
 
   result = Model.user();
