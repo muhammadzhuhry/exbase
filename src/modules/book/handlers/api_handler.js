@@ -1,42 +1,43 @@
-const express = require('express');
 const commandsDomain = require('../repositories/commands/domain');
 const queriesDomain = require('../repositories/queries/domain');
 const validator = require('../utils/validator');
 const wrapper = require('../../../helpers/utils/wrapper');
 const { SUCCESS:http } = require('../../../helpers/http-status/status-code');
 
-const router = express.Router();
+const root = async (req, res) => {
+  wrapper.response(res, 'success', wrapper.data('api_handler book'), 'root of book');
+};
 
 // QUERIES
 
-// handler get one book
-router.get('/:id', async (req, res) => {
-  const bookId = req.params.id;
-
-  const getOneBook = async () => queriesDomain.getOneBook(bookId);
-  const sendResponse = async (result) => {
-    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
-      : wrapper.response(res, 'success', result, `success get book with id ${bookId}`, http.OK);
-  };
-  sendResponse(await getOneBook());
-});
-
 // handler get list book
-router.get('/', async (req, res) => {
+const getBooks = async (req, res) => {
   const payload = { ...req.query };
 
-  const getBooks = async () => queriesDomain.getBooks(payload);
+  const getData = async () => queriesDomain.getBooks(payload);
   const sendResponse = async (result) => {
     (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
       : wrapper.paginationResponse(res, 'success', result, 'success get list book', http.OK);
   };
-  sendResponse(await getBooks());
-});
+  sendResponse(await getData());
+};
+
+// handler get one book
+const getOneBook = async (req, res) => {
+  const bookId = req.params.id;
+
+  const getData = async () => queriesDomain.getOneBook(bookId);
+  const sendResponse = async (result) => {
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.response(res, 'success', result, `success get book with id ${bookId}`, http.OK);
+  };
+  sendResponse(await getData());
+};
 
 // COMMANDS
 
 // handler insert book
-router.post('/', async (req, res) => {
+const insertBook = async (req, res) => {
   const payload = { ...req.body };
 
   const validatePayload = await validator.validateInsertBook(payload);
@@ -52,10 +53,10 @@ router.post('/', async (req, res) => {
       : wrapper.paginationResponse(res, 'success', result, 'success insert book', http.CREATED);
   };
   sendResponse(await postBook(validatePayload));
-});
+};
 
 // hander update book
-router.put('/:id', async (req, res) => {
+const updateBook = async (req, res) => {
   const bookId = req.params.id;
   const payload = { ...req.body };
   const schema = {
@@ -76,6 +77,12 @@ router.put('/:id', async (req, res) => {
       : wrapper.paginationResponse(res, 'success', result, `success update book with id ${bookId}`, http.OK);
   };
   sendResponse(await putBook(validatePayload));
-});
+};
 
-module.exports = router;
+module.exports = {
+  root,
+  getBooks,
+  getOneBook,
+  insertBook,
+  updateBook
+};

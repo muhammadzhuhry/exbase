@@ -6,6 +6,29 @@ const config = {
   name: process.env.NAME,
   baseUrl: process.env.BASEURL,
   mode: process.env.MODE,
+  cipher: {
+    algorithm: process.env.CIPHER_ALGORITHM,
+    ivLength: parseInt(process.env.CIPHER_IV_LENGTH),
+    key: process.env.CIPHER_KEY
+  },
+  basicAuth: [
+    {
+      username: process.env.BASIC_AUTH_USERNAME,
+      password: process.env.BASIC_AUTH_PASSWORD
+    }
+  ],
+  jwt: {
+    secretKey: process.env.SECRET_KEY,
+    signOptions: {
+      expiresIn: process.env.JWT_EXPIRATION_TIME
+    },
+    refresh: {
+      secretKey: process.env.REFRESH_SECRET_KEY,
+      signOptions: {
+        expiresIn: process.env.REFRESH_JWT_EXPIRATION_TIME
+      }
+    },
+  },
   mongodb: {
     url: process.env.MONGO_DATABASE_URL,
     maxPoolSize: process.env.MONGO_MAX_POOL_SIZE,
