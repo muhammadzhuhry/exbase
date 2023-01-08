@@ -1,6 +1,6 @@
 class Query {
-  constructor(db) {
-    this.db = db;
+  constructor(mysql) {
+    this.mysql = mysql;
   }
 
   async findOneUser(parameter) {
@@ -12,7 +12,7 @@ class Query {
   async findUserByEmail(email) {
     const valueData = [email];
     const query = 'SELECT * FROM Users WHERE email = ?';
-    const result = await this.db.preparedQuery(query, valueData);
+    const result = await this.mysql.preparedQuery(query, valueData);
     return result;
   }
 
