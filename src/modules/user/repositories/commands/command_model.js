@@ -17,6 +17,10 @@ const loginSchema = Joi.object({
   password: Joi.string().required()
 });
 
+const refreshTokenSchema = Joi.object({
+  refreshToken: Joi.string().required()
+});
+
 const user = () => {
   return {
     name: '',
@@ -32,5 +36,6 @@ module.exports = {
   user,
   registerUserSchema,
   updateUserSchema,
-  loginSchema
+  loginSchema,
+  refreshTokenSchema
 };
