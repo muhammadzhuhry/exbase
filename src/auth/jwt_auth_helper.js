@@ -5,6 +5,8 @@ const { UnauthorizedError, ForbiddenError } = require('../helpers/error');
 
 const secretKey = config.get('/jwt/secretKey');
 const signOption = config.get('/jwt/signOptions');
+const refreshSecretKey = config.get('/jwt/refresh/secretKey');
+const refreshSignOption = config.get('/jwt/refresh/signOptions');
 
 const generateToken = async(payload) => {
   const token = jwt.sign(payload, secretKey, signOption);
@@ -12,7 +14,7 @@ const generateToken = async(payload) => {
 };
 
 const generateRefreshToken = async(payload) => {
-  const token = jwt.sign(payload, secretKey, signOption);
+  const token = jwt.sign(payload, refreshSecretKey, refreshSignOption);
   return token;
 };
 
@@ -54,8 +56,26 @@ const verifyToken = async(req, res, next) => {
   next();
 };
 
+const verifyRefreshToken = async(token) => {
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, refreshSecretKey, signOption);
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return wrapper.error(new UnauthorizedError('refresh token expired!'));
+    }
+    return wrapper.error(new UnauthorizedError('refresh token is not valid!'));
+  }
+
+  delete decodedToken.iat;
+  delete decodedToken.exp;
+
+  return wrapper.data(decodedToken);
+};
+
 module.exports = {
   generateToken,
   generateRefreshToken,
-  verifyToken
+  verifyToken,
+  verifyRefreshToken
 };
