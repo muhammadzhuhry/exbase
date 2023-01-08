@@ -2,29 +2,26 @@ const validate = require('validate.js');
 const Query = require('./query');
 const Model = require('./query_model');
 const config = require('../../../../config');
-const Mongo = require('../../../../helpers/databases/mongodb/db');
+const Mysql = require('../../../../helpers/databases/mysql/db');
 const wrapper = require('../../../../helpers/utils/wrapper');
 const { NotFoundError, BadRequestError } = require('../../../../helpers/error');
 
-const mongodb = new Mongo(config.get('/mongodb').url);
-const query = new Query(mongodb);
+const mysqldb = new Mysql(config.get('/mysql'));
+const query = new Query(mysqldb);
 
 const getOneUser = async (data) => {
-  let userId, result;
+  let result, email = data;
 
-  userId = parseInt(data);
-
-  const user = await query.findOneUser({ id: userId });
-  if (validate.isEmpty(user.data)) {
-    return wrapper.error(new NotFoundError(`can not find user with id ${userId}`, {}));
+  const user = await query.findUserByEmail(email);
+  if (user.error || validate.isEmpty(user.data)) {
+    return wrapper.error(new NotFoundError(`can not find user with email ${email}`, {}));
   }
 
   result = Model.user();
-  result.id = user.data.id;
-  result.name = user.data.name;
-  result.gender = user.data.gender;
-  result.createdAt = user.data.createdAt;
-  result.updatedAt = user.data.updatedAt;
+  result.name = user.data[0].name;
+  result.email = user.data[0].email;
+  result.createdAt = user.data[0].created_at;
+  result.updatedAt = user.data[0].updated_at;
 
   return wrapper.data(result);
 };

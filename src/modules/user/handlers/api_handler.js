@@ -25,12 +25,12 @@ const getUsers = async (req, res) => {
 
 // handler get one user
 const getOneUser = async (req, res) => {
-  const userId = req.params.id;
+  const email = req.params.email;
 
-  const getData = async () => queriesDomain.getOneUser(userId);
+  const getData = async () => queriesDomain.getOneUser(email);
   const sendResponse = async (result) => {
     (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
-      : wrapper.response(res, 'success', result, `success get user with id ${userId}`, http.OK);
+      : wrapper.response(res, 'success', result, `success get user with email ${email}`, http.OK);
   };
   sendResponse(await getData());
 };
