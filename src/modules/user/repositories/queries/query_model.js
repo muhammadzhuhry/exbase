@@ -1,13 +1,10 @@
 const user = () => {
-  const model = {
-    id: 0,
+  return {
     name: '',
-    gender: '',
+    email: '',
     createdAt: '',
     updatedAt: ''
   };
-
-  return model;
 };
 
 module.exports = {

@@ -1,18 +1,19 @@
 class Query {
-  constructor(db) {
-    this.db = db;
+  constructor(mysql) {
+    this.mysql = mysql;
   }
 
-  async insertUser(document) {
-    this.db.setCollection('users');
-    const recordset = await this.db.insertOne(document);
-    return recordset;
+  async registerUser(payload) {
+    const valueData = [payload.name, payload.email, payload.password, payload.is_active, payload.created_at, payload.updated_at];
+    const query = 'INSERT INTO Users (name, email, password, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)';
+    const result = await this.mysql.preparedQuery(query, valueData);
+    return result;
   }
 
-  async updateUser(parameter, document){
-    this.db.setCollection('users');
-    const updateData = {$set : document};
-    const result = await this.db.upsertOne(parameter, updateData);
+  async updateUser(payload) {
+    const valueData = [payload.name, payload.email, payload.updated_at, payload.id];
+    const query = 'UPDATE Users SET name = ?, email = ?, updated_at = ? WHERE id = ?';
+    const result = await this.mysql.preparedQuery(query, valueData);
     return result;
   }
 }
