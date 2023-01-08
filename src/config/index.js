@@ -18,12 +18,12 @@ const config = {
     }
   ],
   jwt: {
-    privateKey: process.env.PRIVATE_KEY,
+    secretKey: process.env.SECRET_KEY,
     signOptions: {
       expiresIn: process.env.JWT_EXPIRATION_TIME
     },
     refresh: {
-      privateKey: process.env.REFRESH_PRIVATE_KEY,
+      secretKey: process.env.REFRESH_SECRET_KEY,
       signOptions: {
         expiresIn: process.env.REFRESH_JWT_EXPIRATION_TIME
       }
