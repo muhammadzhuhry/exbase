@@ -11,5 +11,6 @@ router.get('/:email', jwtAuth.verifyToken, userHandler.getOneUser);
 router.post('/register', basicAuth.isAuthenticated, userHandler.registerUser);
 router.put('/update/:id', basicAuth.isAuthenticated, userHandler.updateUser);
 router.post('/login', basicAuth.isAuthenticated, userHandler.loginUser);
+router.post('/token', basicAuth.isAuthenticated, userHandler.regenerateToken);
 
 module.exports = router;

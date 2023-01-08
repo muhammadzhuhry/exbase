@@ -97,11 +97,31 @@ const loginUser = async (req, res) => {
   sendResponse(await postUser(validatePayload));
 };
 
+// hander refresh token user
+const regenerateToken = async (req, res) => {
+  const payload = { ...req.body };
+
+  const validatePayload = await validator.isValidPayload(payload, commandModel.refreshTokenSchema);
+  const postUser = async (result) => {
+    if (result.error) {
+      return result;
+    }
+    return await commandsDomain.regenerateToken(payload);
+  };
+
+  const sendResponse = async (result) => {
+    (result.error) ? wrapper.response(res, 'fail', result, result.error.message, result.error.code)
+      : wrapper.paginationResponse(res, 'success', result, 'success regenerated new access token', http.OK);
+  };
+  sendResponse(await postUser(validatePayload));
+};
+
 module.exports = {
   root,
   getUsers,
   getOneUser,
   registerUser,
   updateUser,
-  loginUser
+  loginUser,
+  regenerateToken
 };

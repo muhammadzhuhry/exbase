@@ -78,8 +78,27 @@ const loginUser = async (data) => {
   });
 };
 
+const regenerateToken = async (data) => {
+  const ctx = 'domain-regenerateToken';
+  let payload = { ...data };
+
+  const checkedRefreshToken = await jwtAuth.verifyRefreshToken(payload.refreshToken);
+
+  if (checkedRefreshToken.error) {
+    logger.info(ctx, 'refresh token is not valid!', 'error');
+    return wrapper.error(new UnauthorizedError('refresh token is not valid!'));
+  }
+
+  const accessToken = await jwtAuth.generateToken(checkedRefreshToken.data);
+
+  return wrapper.data({
+    accessToken
+  });
+};
+
 module.exports = {
   registerUser,
   updateUser,
-  loginUser
+  loginUser,
+  regenerateToken
 };
