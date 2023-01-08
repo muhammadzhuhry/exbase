@@ -32,8 +32,8 @@ const registerUser = async (data) => {
 
   const insert = await command.registerUser(user);
   if (insert.error) {
-    logger.error(ctx, insert.error, 'error');
-    return wrapper.error(new BadRequestError('failed register user', {}));
+    logger.info(ctx, insert.error, 'error');
+    return wrapper.error(new BadRequestError('failed register user'));
   }
 
   return wrapper.data(user);
@@ -46,8 +46,8 @@ const updateUser = async (data) => {
   payload.updated_at = dateFormat(new Date(), 'isoDateTime');
   const update = await command.updateUser(payload);
   if (update.error) {
-    logger.error(ctx, update.error, 'error');
-    return wrapper.error(new InternalServerError(`failed update user with id ${payload.id}`, {}));
+    logger.info(ctx, update.error, 'error');
+    return wrapper.error(new InternalServerError(`failed update user with id ${payload.id}`));
   }
 
   return wrapper.data({ 'changedRows': update.data.changedRows });
@@ -59,7 +59,7 @@ const loginUser = async (data) => {
 
   const user = await query.findUserByEmail(payload.email);
   if (user.error || validate.isEmpty(user.data)) {
-    logger.error(ctx, user.error, 'error');
+    logger.info(ctx, user.error, 'error');
     return wrapper.error(new NotFoundError('user not found'));
   }
 
